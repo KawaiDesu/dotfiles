@@ -84,7 +84,7 @@ fi
 # vars
 export GOPATH=~/.gopath
 
-PROXY=http://localhost:3128
+PROXY=http://proxy:3128
 export http_proxy="$PROXY"
 export https_proxy="$PROXY"
 export ftp_proxy=
@@ -92,31 +92,48 @@ export ftp_proxy=
 export PROMPT_COMMAND=_pc
 
 _pc(){
- 
-local color_off='\033[0m'     # disable color
-local color_user='\033[0;33m' # brown/orange
-local color_line='\033[0;37m' # light gray
-local color_host='\033[1;34m' # light blue
+local RETURN_CODE="$?"
 
-local hn=$(hostname)
+local color_off='\[\033[0m\]'      # disable color
+local color_user='\[\033[0;33m\]'  # brown/orange
+local color_line='\[\033[1;30m\]'  # light gray
+local color_host='\[\033[1;34m\]'  # light blue
+local color_lred='\[\033[1;31m\]'  # light red
+local color_green='\[\033[1;32m\]' # green
 
+# set return code color
+local RC_COLOR="${color_lred}"
+if [[ "$RETURN_CODE" == "0" ]]; then
+	RC_COLOR="${color_green}"
+fi
+
+# set pwd home prefix
 local PWDNAME="$PWD"
-if [[ "${HOME}" == "${PWD}" ]]; then
-	PWDNAME="~";
+if [[ "$HOME" == "$PWD" ]]; then
+	PWDNAME="~"
 else
-	if [[ "${HOME}" == "${PWD:0:${#HOME}}" ]]; then
-		PWDNAME="~${PWD:${#HOME}}";
-	fi;
-fi;
+	if [[ "$HOME" == "${PWD:0:${#HOME}}" ]]; then
+		PWDNAME="~${PWD:${#HOME}}"
+	fi
+fi
 
-local ENV_TEXT="${USER}@${hn}:${PWDNAME} "
-local ENV_PS="${color_user}${USER}${color_off}@${color_host}${hn}${color_off}:${PWDNAME} "
+# detect if root and set color
+local USER_TYPE="$color_green"
+if [[ "$UID" -eq "0" ]]; then
+	USER_TYPE="$color_lred"
+fi
 
-local FILL_LINE=$(printf '─%.0s' $(eval echo {1..$(($COLUMNS-${#ENV_TEXT}))}))
+local LINE_LEN=$(($COLUMNS-${#USER}-${#HOSTNAME}-${#PWDNAME}-${#RETURN_CODE}-4))
+local FILL_LINE=$(printf '─%.0s' $(eval echo {1..$LINE_LEN}))
 
+PS1="${color_user}\u${color_off}@\
+${color_host}${HOSTNAME}${color_off}:\
+${PWDNAME} \
+${color_line}${FILL_LINE}${color_off} \
+${RC_COLOR}${RETURN_CODE}${color_off}\n\
+${USER_TYPE}➜$color_off ";
 
-PS1="${ENV_PS}\
-${FILL_LINE}\
-${color_off}\n➜ ";
+echo -en "\033[6n" && read -sdR CURPOS;
+[[ ${CURPOS##*;} -gt 1 ]] && echo "${color_}↵${color_error_off}";
 
 }
