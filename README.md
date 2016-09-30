@@ -1,9 +1,12 @@
 # dotfiles
 My dotfiles, nothing unusual.
 
-.bashrc idea taken from https://habrahabr.ru/company/mailru/blog/145008/ (https://github.com/dreadatour/dotfiles/blob/master/.bash_profile)
+.bashrc idea taken from [Habrahabr post](https://habrahabr.ru/company/mailru/blog/145008/)
+([repo](https://github.com/dreadatour/dotfiles/blob/master/.bash_profile))
 
-PS 1 with my .bashrc
---------------------
+Bit simple, clean and general purpose
+
+PS1 with this .bashrc
 
 [[screenshots/bashrc.png|alt=bashrc screenshot]]
+
