@@ -10,8 +10,6 @@ notebook tab {
   margin: 0px;
   margin-left: -5px;
   margin-right: -5px;
-//  border-left: 1px solid black;
-//  border-right: 1px solid black;
 }
 
 notebook tab button {
@@ -22,12 +20,11 @@ notebook tab button {
   margin-top: 0px;
   margin-bottom: 0px;
   font-weight: normal;
-
 }
 
 notebook button {
-  min-height:0 px;
-  min-width: 0 px;
+  min-height: 0px;
+  min-width: 0px;
   margin: 0px;
   padding: 0px;
   font-weight: normal;
